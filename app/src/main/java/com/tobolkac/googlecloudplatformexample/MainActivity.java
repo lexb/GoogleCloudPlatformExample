@@ -1,26 +1,24 @@
 package com.tobolkac.googlecloudplatformexample;
 
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-
-import com.example.tobolkac.googlecloudplatformexample.backend.registration.Registration;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.extensions.android.json.AndroidJsonFactory;
-import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
-import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
-
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 public class MainActivity extends ActionBarActivity {
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView.Adapter mAdapter;
+
+    String[] data = new String[]{"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -28,7 +26,22 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        new GcmRegistrationAsyncTask(this).execute();
+        mRecyclerView = (RecyclerView) findViewById(R.id.image_recycler_view);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        mLayoutManager = new GridLayoutManager(this, 2);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // specify an adapter (see also next example)
+        mAdapter = new MyAdapter(data);
+
+        mRecyclerView.setAdapter(mAdapter);
+
+        //new GcmRegistrationAsyncTask(this).execute();
     }
 
 
@@ -57,5 +70,49 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public class MyAdapter extends RecyclerView.Adapter
+    {
+        private String[] mDataset;
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            // each data item is just a string in this case
+            public TextView mTextView;
+            public ViewHolder(View v) {
+                super(v);
+                mTextView = (TextView) v.findViewById(R.id.image_list_text_view);
+            }
+        }
+
+        // Provide a suitable constructor (depends on the kind of dataset)
+        public MyAdapter(String[] myDataset) {
+            mDataset = myDataset;
+        }
+
+        // Create new views (invoked by the layout manager)
+        @Override
+        public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                       int viewType) {
+            // create a new view
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.image_list_element, parent, false);
+
+
+            ViewHolder vh = new ViewHolder(v);
+            return vh;
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i)
+        {
+            ((ViewHolder) viewHolder).mTextView.setText(mDataset[i]);
+        }
+
+
+        // Return the size of your dataset (invoked by the layout manager)
+        @Override
+        public int getItemCount() {
+            return mDataset.length;
+        }
+    }
 
 }
