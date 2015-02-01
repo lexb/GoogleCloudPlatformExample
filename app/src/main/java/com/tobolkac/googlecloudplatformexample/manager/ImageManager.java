@@ -5,6 +5,7 @@ import android.content.Context;
 import com.tobolkac.googlecloudplatformexample.model.Image;
 
 import java.util.Date;
+import java.util.UUID;
 
 import io.realm.Realm;
 import io.realm.RealmQuery;
@@ -22,6 +23,7 @@ public class ImageManager
         realm.beginTransaction();
         Image image = realm.createObject(Image.class);
 
+        image.setImageId(UUID.randomUUID().toString());
         image.setTimestamp(new Date());
         image.setImage(imageData);
 
@@ -37,6 +39,18 @@ public class ImageManager
         RealmResults<Image> result1 = query.findAll();
         result1.sort("timestamp");
         return result1;
+    }
+
+    public static Image getImage(Context context, String imageId)
+    {
+        Realm realm = Realm.getInstance(context);
+        RealmQuery<Image> query = realm.where(Image.class);
+
+        query.equalTo("imageId", imageId);
+
+        // Execute the query:
+        RealmResults<Image> result1 = query.findAll();
+        return result1.get(0);
     }
 
 

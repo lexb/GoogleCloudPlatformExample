@@ -12,6 +12,8 @@ import io.realm.annotations.RealmClass;
 public class Image extends RealmObject
 {
     private Date timestamp;
+
+    private String imageId;
     private byte[] image;
 
     public Date getTimestamp()
@@ -32,5 +34,15 @@ public class Image extends RealmObject
     public void setImage(byte[] image)
     {
         this.image = image;
+    }
+
+    public String getImageId()
+    {
+        return imageId;
+    }
+
+    public void setImageId(String imageId)
+    {
+        this.imageId = imageId;
     }
 }

@@ -1,5 +1,7 @@
 package com.tobolkac.googlecloudplatformexample;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -53,7 +55,7 @@ public class MainActivity extends ActionBarActivity {
 
         RealmResults<Image> images = ImageManager.getImages(this);
         // specify an adapter (see also next example)
-        mAdapter = new MyAdapter(images);
+        mAdapter = new MyAdapter(this, images);
 
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -91,6 +93,7 @@ public class MainActivity extends ActionBarActivity {
     public static class MyAdapter extends RecyclerView.Adapter
     {
         private RealmResults<Image> mDataset;
+        private Context context;
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
             // each data item is just a string in this case
@@ -103,8 +106,9 @@ public class MainActivity extends ActionBarActivity {
         }
 
         // Provide a suitable constructor (depends on the kind of dataset)
-        public MyAdapter(RealmResults<Image> myDataset) {
+        public MyAdapter(Context context, RealmResults<Image> myDataset) {
             mDataset = myDataset;
+            this.context = context;
         }
 
         // Create new views (invoked by the layout manager)
@@ -134,6 +138,21 @@ public class MainActivity extends ActionBarActivity {
 //            options.inJustDecodeBounds = false;
             Bitmap bitmap = BitmapFactory.decodeByteArray(mDataset.get(i).getImage(), 0, mDataset.get(i).getImage().length, options);
             ((ViewHolder) viewHolder).mImageView.setImageBitmap(bitmap);
+            ((ViewHolder) viewHolder).mImageView.setTag(mDataset.get(i).getImageId());
+
+            ((ViewHolder) viewHolder).mImageView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    showImagePreviewDialog((String) v.getTag());
+                }
+            });
+        }
+
+        private void showImagePreviewDialog(String imageId)
+        {
+            ImagePreviewDialog.newInstance(imageId).show(((Activity) context).getFragmentManager(), "");
         }
 
         private int calculateInSampleSize(
