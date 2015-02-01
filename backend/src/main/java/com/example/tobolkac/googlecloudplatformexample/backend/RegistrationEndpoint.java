@@ -28,7 +28,8 @@ import static com.example.tobolkac.googlecloudplatformexample.backend.OfyService
  * authentication! If this app is deployed, anyone can access this endpoint! If
  * you'd like to add authentication, take a look at the documentation.
  */
-@Api(name = "registration", version = "v1", namespace = @ApiNamespace(ownerDomain = "backend.googlecloudplatformexample.tobolkac.example.com", ownerName = "backend.googlecloudplatformexample.tobolkac.example.com", packagePath = ""))
+@Api(name = "registration", version = "v1", namespace = @ApiNamespace(ownerDomain = "backend.googlecloudplatformexample.tobolkac.example.com",
+        ownerName = "backend.googlecloudplatformexample.tobolkac.example.com", packagePath = ""))
 public class RegistrationEndpoint {
 
     private static final Logger log = Logger.getLogger(RegistrationEndpoint.class.getName());
